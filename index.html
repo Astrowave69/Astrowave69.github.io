@@ -6,6 +6,16 @@
     <title>Stereo to Mid-Side Converter</title>
     <link rel="stylesheet" href="/static/style.css">
     <script src="https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player@latest"></script> <!-- For Animations -->
+    <style>
+        /* Styles for layout and hiding/showing sections */
+        .hidden { display: none; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; }
+        .upload-section, .result-section { text-align: center; }
+        .upload-label { font-size: 20px; margin-bottom: 10px; }
+        .link-button { display: inline-block; background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 20px; }
+        .progress-container { text-align: center; }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -29,7 +39,7 @@
         <!-- Processing and Result Section -->
         <div id="result-section" class="hidden">
             <!-- Progress Indicator -->
-            <div id="progress-container" class="progress-container">
+            <div id="progress-container" class="progress-container hidden">
                 <lottie-player 
                     src="https://assets8.lottiefiles.com/private_files/lf30_edlxyilf.json"  
                     background="transparent"  
