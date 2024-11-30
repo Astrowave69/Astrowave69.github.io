@@ -9,48 +9,47 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>Stereo to Mid-Side Converter</h1>
-            <p>Convert your stereo audio into Mid and Side channels effortlessly.</p>
+        <!-- Upload Section -->
+        <div id="upload-section">
+            <div class="header">
+                <h1>Stereo to Mid-Side Converter</h1>
+                <p>Convert your stereo audio into Mid and Side channels effortlessly.</p>
+            </div>
+
+            <!-- File Upload Section -->
+            <div class="upload-section">
+                <label for="audioFile" class="upload-label">Select a Stereo Audio File</label>
+                <input type="file" id="audioFile" accept=".mp3,.wav,.ogg,.flac">
+            </div>
+
+            <!-- Buttons -->
+            <button onclick="processAudio()">Start Conversion</button>
         </div>
 
-        <!-- File Upload Section -->
-        <div class="upload-section">
-            <label for="audioFile" class="upload-label">Select a Stereo Audio File</label>
-            <input type="file" id="audioFile" accept=".mp3,.wav,.ogg,.flac" onchange="clearPreviousResults()">
-        </div>
+        <!-- Processing and Result Section -->
+        <div id="result-section" class="hidden">
+            <!-- Progress Indicator -->
+            <div id="progress-container" class="progress-container">
+                <lottie-player 
+                    src="https://assets8.lottiefiles.com/private_files/lf30_edlxyilf.json"  
+                    background="transparent"  
+                    speed="1"  
+                    loop  
+                    autoplay>
+                </lottie-player>
+                <p id="progress-status">Processing...</p>
+            </div>
 
-        <!-- Buttons -->
-        <button onclick="processAudio()">Start Conversion</button>
-
-        <!-- Progress Indicator -->
-        <div id="progress-container" class="progress-container hidden">
-            <lottie-player 
-                src="https://assets8.lottiefiles.com/private_files/lf30_edlxyilf.json"  
-                background="transparent"  
-                speed="1"  
-                loop  
-                autoplay>
-            </lottie-player>
-            <p id="progress-status">Processing...</p>
-        </div>
-
-        <!-- Result Links -->
-        <div id="result-container" class="hidden">
-            <p>Your files are ready! Download them below:</p>
-            <div id="links"></div>
+            <!-- Result Links -->
+            <div id="result-container" class="hidden">
+                <p>Your files are ready! Download them below:</p>
+                <div id="links"></div>
+                <button onclick="goBackToUpload()">Back to Upload</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // Clears previous results as soon as a new file is selected
-        function clearPreviousResults() {
-            // Hide the result container and clear the download links immediately
-            const resultContainer = document.getElementById("result-container");
-            resultContainer.classList.add("hidden");
-            document.getElementById("links").innerHTML = "";
-        }
-
         // Function to handle the audio file processing
         async function processAudio() {
             const fileInput = document.getElementById('audioFile');
@@ -62,6 +61,10 @@
             const file = fileInput.files[0];
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const fileReader = new FileReader();
+
+            // Hide the upload section and show the result section
+            document.getElementById("upload-section").classList.add("hidden");
+            document.getElementById("result-section").classList.remove("hidden");
 
             // Show progress and start the file reading
             document.getElementById("progress-container").classList.remove("hidden");
@@ -154,6 +157,12 @@
             for (let i = 0; i < str.length; i++) {
                 view.setUint8(offset + i, str.charCodeAt(i));
             }
+        }
+
+        // Function to go back to the upload page
+        function goBackToUpload() {
+            document.getElementById("result-section").classList.add("hidden");
+            document.getElementById("upload-section").classList.remove("hidden");
         }
     </script>
 </body>
