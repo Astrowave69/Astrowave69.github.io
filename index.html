@@ -17,7 +17,7 @@
         <!-- File Upload Section -->
         <div class="upload-section">
             <label for="audioFile" class="upload-label">Select a Stereo Audio File</label>
-            <input type="file" id="audioFile" accept=".mp3,.wav,.ogg,.flac">
+            <input type="file" id="audioFile" accept=".mp3,.wav,.ogg,.flac" onchange="clearPreviousResults()">
         </div>
 
         <!-- Buttons -->
@@ -43,6 +43,14 @@
     </div>
 
     <script>
+        // Clears previous results as soon as a new file is selected
+        function clearPreviousResults() {
+            // Hide the result container and clear the download links immediately
+            const resultContainer = document.getElementById("result-container");
+            resultContainer.classList.add("hidden");
+            document.getElementById("links").innerHTML = "";
+        }
+
         // Function to handle the audio file processing
         async function processAudio() {
             const fileInput = document.getElementById('audioFile');
@@ -54,11 +62,6 @@
             const file = fileInput.files[0];
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const fileReader = new FileReader();
-
-            // Clear previous results
-            const resultContainer = document.getElementById("result-container");
-            resultContainer.classList.add("hidden");
-            document.getElementById("links").innerHTML = "";
 
             // Show progress and start the file reading
             document.getElementById("progress-container").classList.remove("hidden");
