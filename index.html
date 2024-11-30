@@ -55,6 +55,15 @@
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const fileReader = new FileReader();
 
+            // Clear previous results
+            const resultContainer = document.getElementById("result-container");
+            resultContainer.classList.add("hidden");
+            document.getElementById("links").innerHTML = "";
+
+            // Show progress and start the file reading
+            document.getElementById("progress-container").classList.remove("hidden");
+            document.getElementById("progress-status").innerText = "Processing...";
+
             // Read the file as an ArrayBuffer
             fileReader.onload = async function (e) {
                 const audioBuffer = await audioContext.decodeAudioData(e.target.result);
@@ -84,7 +93,7 @@
 
                 // Show the result
                 const linksDiv = document.getElementById("links");
-                linksDiv.innerHTML = `
+                linksDiv.innerHTML = ` 
                     <a href="${URL.createObjectURL(midBlob)}" download="mid_channel.wav" class="link-button">Download Mid Channel</a>
                     <a href="${URL.createObjectURL(sideBlob)}" download="side_channel.wav" class="link-button">Download Side Channel</a>
                 `;
@@ -92,8 +101,7 @@
                 document.getElementById("progress-container").classList.add("hidden");
             };
 
-            // Show progress and start the file reading
-            document.getElementById("progress-container").classList.remove("hidden");
+            // Read the file
             fileReader.readAsArrayBuffer(file);
         }
 
@@ -109,7 +117,7 @@
             writeString(view, 0, 'RIFF');
             view.setUint32(4, length - 8, true);
             writeString(view, 8, 'WAVE');
-            writeString(view, 12, 'fmt ');
+            writeString(view, 12, 'fmt ' );
             view.setUint32(16, 16, true);
             view.setUint16(20, 1, true);
             view.setUint16(22, numOfChannels, true);
