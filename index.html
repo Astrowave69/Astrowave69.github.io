@@ -4,145 +4,290 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stereo to Mid-Side Converter</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player@latest"></script> <!-- For Animations -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+    <script src="https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player@latest"></script>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(120deg, #1e1e2f, #292942);
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            background-size: 200% 200%;
+            animation: gradientShift 10s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(41, 41, 66, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            animation: slideIn 1s ease-out;
+            width: 90%;
+            max-width: 600px;
+            max-height: 550px;
+            overflow: auto;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            color: #fff;
+            text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #c0c0d0;
+            margin-top: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* File Input */
+        .upload-label {
+            display: block;
+            font-size: 1rem;
+            color: #a0a0b0;
+            margin: 15px 0;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            border: 2px dashed #4caf50;
+            border-radius: 12px;
+            background: #1e1e2f;
+            color: #4caf50;
+            cursor: pointer;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        input[type="file"]:hover {
+            border-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        /* Buttons */
+        button, .link-button {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            margin: 10px;
+        }
+
+        button:hover, .link-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(72, 207, 82, 0.5);
+        }
+
+        /* Progress Indicator */
+        .progress-container {
+            margin-top: 20px;
+            animation: fadeIn 1.5s ease-in-out;
+            margin-bottom: 40px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .progress-container lottie-player {
+            width: 100px;
+            height: 100px;
+            margin: 10px auto;
+        }
+
+        .result-container {
+            margin-top: 20px;
+        }
+
+        #result-section, #processing-section {
+            padding-bottom: 40px;
+        }
+
+        .link-button {
+            margin-bottom: 20px;
+        }
+
+        #result-section {
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>Stereo to Mid-Side Converter</h1>
-            <p>Convert your stereo audio into Mid and Side channels effortlessly.</p>
+        <!-- Upload Section -->
+        <div id="upload-section">
+            <div class="header">
+                <h1>Stereo to Mid-Side Converter</h1>
+                <p>Convert your stereo audio into Mid and Side channels effortlessly.</p>
+            </div>
+
+            <div class="upload-section">
+                <label for="audioFile" class="upload-label">Select a Stereo Audio File</label>
+                <input type="file" id="audioFile" accept=".mp3,.wav,.ogg,.flac">
+            </div>
+
+            <button onclick="processAudio()">Start Conversion</button>
         </div>
 
-        <!-- File Upload Section -->
-        <div class="upload-section">
-            <label for="audioFile" class="upload-label">Select a Stereo Audio File</label>
-            <input type="file" id="audioFile" accept=".mp3,.wav,.ogg,.flac">
+        <!-- Processing Section -->
+        <div id="processing-section" class="hidden">
+            <div class="progress-container">
+                <lottie-player
+                    src="https://assets8.lottiefiles.com/private_files/lf30_edlxyilf.json"
+                    background="transparent"
+                    speed="1"
+                    loop
+                    autoplay>
+                </lottie-player>
+                <p id="progress-status">Processing...</p>
+            </div>
         </div>
 
-        <!-- Buttons -->
-        <button onclick="processAudio()">Start Conversion</button>
-
-        <!-- Progress Indicator -->
-        <div id="progress-container" class="progress-container hidden">
-            <lottie-player 
-                src="https://assets8.lottiefiles.com/private_files/lf30_edlxyilf.json"  
-                background="transparent"  
-                speed="1"  
-                loop  
-                autoplay>
-            </lottie-player>
-            <p id="progress-status">Processing...</p>
-        </div>
-
-        <!-- Result Links -->
-        <div id="result-container" class="hidden">
-            <p>Your files are ready! Download them below:</p>
-            <div id="links"></div>
+        <!-- Result Section -->
+        <div id="result-section" class="hidden">
+            <div class="result-container">
+                <p>Your files are ready! Download them below:</p>
+                <div id="links"></div>
+                <button onclick="goBackToUpload()">Back to Upload</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // Function to handle the audio file processing
         async function processAudio() {
-            const fileInput = document.getElementById('audioFile');
+            const fileInput = document.getElementById("audioFile");
             if (!fileInput.files.length) {
                 alert("Please select a file!");
                 return;
             }
 
-            const file = fileInput.files[0];
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const fileReader = new FileReader();
+            // Show processing section
+            document.getElementById("upload-section").classList.add("hidden");
+            document.getElementById("processing-section").classList.remove("hidden");
 
-            // Read the file as an ArrayBuffer
-            fileReader.onload = async function (e) {
-                const audioBuffer = await audioContext.decodeAudioData(e.target.result);
-                const leftChannel = audioBuffer.getChannelData(0);  // Left channel
-                const rightChannel = audioBuffer.getChannelData(1); // Right channel
+            try {
+                const file = fileInput.files[0];
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const fileReader = new FileReader();
 
-                // Mid-Side Processing
-                const midChannel = new Float32Array(leftChannel.length);
-                const sideChannel = new Float32Array(leftChannel.length);
+                fileReader.onload = async function (e) {
+                    const audioBuffer = await audioContext.decodeAudioData(e.target.result);
+                    const leftChannel = audioBuffer.getChannelData(0);
+                    const rightChannel = audioBuffer.getChannelData(1);
 
-                // Mid = (Left + Right) / 2
-                // Side = (Left - Right) / 2
-                for (let i = 0; i < leftChannel.length; i++) {
-                    midChannel[i] = (leftChannel[i] + rightChannel[i]) / 2;
-                    sideChannel[i] = (leftChannel[i] - rightChannel[i]) / 2;
-                }
+                    const midChannel = new Float32Array(leftChannel.length);
+                    const sideChannel = new Float32Array(leftChannel.length);
 
-                // Convert the Float32Array to audio buffers
-                const midBuffer = audioContext.createBuffer(1, midChannel.length, audioBuffer.sampleRate);
-                midBuffer.copyToChannel(midChannel, 0);
-                const sideBuffer = audioContext.createBuffer(1, sideChannel.length, audioBuffer.sampleRate);
-                sideBuffer.copyToChannel(sideChannel, 0);
+                    for (let i = 0; i < leftChannel.length; i++) {
+                        midChannel[i] = (leftChannel[i] + rightChannel[i]) / 2;
+                        sideChannel[i] = (leftChannel[i] - rightChannel[i]) / 2;
+                    }
 
-                // Create downloadable links for the mid and side channels
-                const midBlob = bufferToWave(midBuffer);
-                const sideBlob = bufferToWave(sideBuffer);
+                    const midBuffer = audioContext.createBuffer(1, midChannel.length, audioBuffer.sampleRate);
+                    midBuffer.copyToChannel(midChannel, 0);
+                    const sideBuffer = audioContext.createBuffer(1, sideChannel.length, audioBuffer.sampleRate);
+                    sideBuffer.copyToChannel(sideChannel, 0);
 
-                // Show the result
-                const linksDiv = document.getElementById("links");
-                linksDiv.innerHTML = ` 
-                    <a href="${URL.createObjectURL(midBlob)}" download="mid_channel.wav" class="link-button">Download Mid Channel</a>
-                    <a href="${URL.createObjectURL(sideBlob)}" download="side_channel.wav" class="link-button">Download Side Channel</a>
-                `;
-                document.getElementById("result-container").classList.remove("hidden");
-                document.getElementById("progress-container").classList.add("hidden");
-            };
+                    const midBlob = bufferToWave(midBuffer);
+                    const sideBlob = bufferToWave(sideBuffer);
 
-            // Show progress and start the file reading
-            document.getElementById("progress-container").classList.remove("hidden");
-            fileReader.readAsArrayBuffer(file);
+                    const linksDiv = document.getElementById("links");
+                    linksDiv.innerHTML = ` 
+                        <a href="${URL.createObjectURL(midBlob)}" download="mid_channel.wav" class="link-button">Download Mid Channel</a>
+                        <a href="${URL.createObjectURL(sideBlob)}" download="side_channel.wav" class="link-button">Download Side Channel</a>
+                    `;
+
+                    // Hide processing section and show result section
+                    document.getElementById("processing-section").classList.add("hidden");
+                    document.getElementById("result-section").classList.remove("hidden");
+                };
+
+                fileReader.readAsArrayBuffer(file);
+            } catch (error) {
+                alert("An error occurred while processing the file. Please try again.");
+                goBackToUpload();
+            }
         }
 
-        // Convert AudioBuffer to WAV format using the buffer-to-WAV conversion technique
         function bufferToWave(audioBuffer) {
-            const numOfChannels = audioBuffer.numberOfChannels;
-            const length = audioBuffer.length * numOfChannels * 2 + 44;
+            const numOfChan = 1; // Always 1 channel for Mid and Side
+            const length = audioBuffer.length * numOfChan * 2 + 44;
             const buffer = new ArrayBuffer(length);
             const view = new DataView(buffer);
-            const channelData = [];
 
-            // Write RIFF header
+            let offset = 0;
+            const channels = [];
+            for (let i = 0; i < numOfChan; i++) {
+                channels.push(audioBuffer.getChannelData(i));
+            }
+
+            // Write WAV file headers
             writeString(view, 0, 'RIFF');
             view.setUint32(4, length - 8, true);
             writeString(view, 8, 'WAVE');
-            writeString(view, 12, 'fmt ');
-            view.setUint32(16, 16, true);
-            view.setUint16(20, 1, true);
-            view.setUint16(22, numOfChannels, true);
-            view.setUint32(24, audioBuffer.sampleRate, true);
-            view.setUint32(28, audioBuffer.sampleRate * numOfChannels * 2, true);
-            view.setUint16(32, numOfChannels * 2, true);
-            view.setUint16(34, 16, true);
+            writeString(view, 12, 'fmt '); 
+            view.setUint32(16, 16, true); 
+            view.setUint16(20, 1, true); 
+            view.setUint16(22, numOfChan, true); 
+            view.setUint32(24, audioBuffer.sampleRate, true); 
+            view.setUint32(28, audioBuffer.sampleRate * numOfChan * 2, true);
+            view.setUint16(32, numOfChan * 2, true);
+            view.setUint16(34, 16, true); 
             writeString(view, 36, 'data');
-            view.setUint32(40, audioBuffer.length * numOfChannels * 2, true);
+            view.setUint32(40, length - 44, true);
 
-            // Write interleaved audio samples
-            for (let channel = 0; channel < numOfChannels; channel++) {
-                channelData[channel] = audioBuffer.getChannelData(channel);
-            }
-
-            let offset = 44;
+            // Write interleaved PCM data
+            offset = 44;
             for (let i = 0; i < audioBuffer.length; i++) {
-                for (let channel = 0; channel < numOfChannels; channel++) {
-                    const sample = Math.max(-1, Math.min(1, channelData[channel][i]));
-                    view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7FFF, true);
+                for (let channel = 0; channel < numOfChan; channel++) {
+                    const sample = channels[channel][i];
+                    view.setInt16(offset, sample * 32767, true);
                     offset += 2;
                 }
             }
 
-            const blob = new Blob([buffer], { type: 'audio/wav' });
-            return blob;
+            return new Blob([view], { type: 'audio/wav' });
         }
 
-        // Helper function to write a string to a DataView
-        function writeString(view, offset, str) {
-            for (let i = 0; i < str.length; i++) {
-                view.setUint8(offset + i, str.charCodeAt(i));
+        function writeString(view, offset, string) {
+            for (let i = 0; i < string.length; i++) {
+                view.setUint8(offset + i, string.charCodeAt(i));
             }
+        }
+
+        function goBackToUpload() {
+            document.getElementById("result-section").classList.add("hidden");
+            document.getElementById("upload-section").classList.remove("hidden");
         }
     </script>
 </body>
