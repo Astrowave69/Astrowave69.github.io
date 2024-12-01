@@ -244,7 +244,7 @@
         }
 
         function bufferToWave(audioBuffer) {
-            const numOfChan = audioBuffer.numberOfChannels;
+            const numOfChan = 1; // Always 1 channel for Mid and Side
             const length = audioBuffer.length * numOfChan * 2 + 44;
             const buffer = new ArrayBuffer(length);
             const view = new DataView(buffer);
@@ -260,20 +260,20 @@
             view.setUint32(4, length - 8, true);
             writeString(view, 8, 'WAVE');
             writeString(view, 12, 'fmt ');
-            view.setUint32(16, 16, true);
-            view.setUint16(20, 1, true);
-            view.setUint16(22, numOfChan, true);
+            view.setUint32(16, 16, true); // Size of fmt chunk
+            view.setUint16(20, 1, true); // PCM format
+            view.setUint16(22, numOfChan, true); // 1 channel for mid/side
             view.setUint32(24, audioBuffer.sampleRate, true);
             view.setUint32(28, audioBuffer.sampleRate * numOfChan * 2, true);
-            view.setUint16(32, numOfChan * 2, true);
-            view.setUint16(34, 16, true);
+            view.setUint16(32, numOfChan * 2, true); // 2 bytes per sample
+            view.setUint16(34, 16, true); // Bits per sample (16-bit PCM)
             writeString(view, 36, 'data');
-            view.setUint32(40, audioBuffer.length * numOfChan * 2, true);
+            view.setUint32(40, audioBuffer.length * numOfChan * 2, true); // Data size
 
             for (let i = 0; i < audioBuffer.length; i++) {
                 for (let channel = 0; channel < numOfChan; channel++) {
                     const sample = channels[channel][i];
-                    view.setInt16(offset, sample * 0x7fff, true);
+                    view.setInt16(offset, sample * 0x7fff, true); // Convert to 16-bit PCM
                     offset += 2;
                 }
             }
